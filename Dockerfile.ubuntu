@@ -9,17 +9,20 @@ MAINTAINER DrTrigon <dr.trigon@surfeu.ch>
 # Initial update
 RUN apt-get -y update
 
+# Wget
+RUN apt-get install -y wget
+
 # Tree
-RUN sudo apt-get install tree
+RUN apt-get install -y tree
 
 ## Xdotool
-#RUN sudo apt-get install xdotool
+#RUN apt-get install -y xdotool
 
 ## GerbV
-#RUN sudo apt-get install gerbv
+#RUN apt-get install -y gerbv
 
 ## Caca
-#RUN sudo apt-get install caca-utils
+#RUN apt-get install -y caca-utils
 
 ## EagleCAD >= 8
 #RUN wget https://trial2.autodesk.com/NET17SWDLD/2017/EGLPRM/ESD/Autodesk_EAGLE_8.7.1_English_Linux_64bit.tar.gz
