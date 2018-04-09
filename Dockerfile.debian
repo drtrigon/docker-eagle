@@ -1,0 +1,58 @@
+# same as Dockerfile.ubuntu (ubuntu-14.04)
+FROM debian:jessie
+MAINTAINER DrTrigon <dr.trigon@surfeu.ch>
+
+# LABEL author.user1="DrTrigon <dr.trigon@surfeu.ch>"
+
+# Environment Variables
+#ENV BOARD_FILE test-eagle-edrc
+
+# Initial update
+RUN apt-get -y update
+
+# Tree
+RUN sudo apt-get install tree
+
+## Xdotool
+#RUN sudo apt-get install xdotool
+
+## GerbV
+#RUN sudo apt-get install gerbv
+
+## Caca
+#RUN sudo apt-get install caca-utils
+
+## EagleCAD >= 8
+#RUN wget https://trial2.autodesk.com/NET17SWDLD/2017/EGLPRM/ESD/Autodesk_EAGLE_8.7.1_English_Linux_64bit.tar.gz
+#RUN tar xf Autodesk_EAGLE_8.7.1_English_Linux_64bit.tar.gz
+#RUN $PWD/eagle-8.7.1/eagle & sleep 3; xdotool key Y
+#RUN export EAGLE=$PWD/eagle-8.7.1/eagle
+#RUN $EAGLE -?    # needs autocad account and login
+
+# EagleCAD >= 7 (< 8)
+RUN wget ftp://ftp.cadsoft.de/eagle/program/7.7/eagle-lin64-7.7.0.run
+RUN chmod +x $PWD/eagle-lin64-7.7.0.run
+RUN $PWD/eagle-lin64-7.7.0.run $PWD
+RUN export EAGLE=$PWD/eagle-7.7.0/bin/eagle
+
+
+RUN tree
+
+
+# setup a pseudo-display
+#RUN "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
+
+#RUN sleep 3
+
+#RUN export DISPLAY=:1.0
+
+
+RUN $EAGLE -? || true    # DOES need a display
+RUN $EAGLE -d? || true    # DOES need a display
+#RUN xvfb-run -a $EAGLE -? || true    # DOES need a display
+#RUN xvfb-run -a $EAGLE -d? || true    # DOES need a display
+
+
+# generate gerber, excellon, bom - see https://github.com/drtrigon/test-eagle-edrc
+
+# using vnc display, may be eagle could be used as usual
