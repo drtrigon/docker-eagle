@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/drtrigon/docker-eagle.svg?branch=master)](https://travis-ci.org/drtrigon/docker-eagle)
+
 https://github.com/pywikibot-catfiles/docker-file-metadata
 
 https://github.com/drtrigon/sketchbook
