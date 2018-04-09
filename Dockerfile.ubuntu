@@ -9,19 +9,19 @@ MAINTAINER DrTrigon <dr.trigon@surfeu.ch>
 # Initial update
 RUN apt-get -y update
 
-# Wget
+# wget
 RUN apt-get install -y wget
 
-# Tree
+# tree
 RUN apt-get install -y tree
 
-## Xdotool
+## xdotool
 #RUN apt-get install -y xdotool
 
 ## GerbV
 #RUN apt-get install -y gerbv
 
-## Caca
+## caca
 #RUN apt-get install -y caca-utils
 
 ## EagleCAD >= 8
@@ -34,11 +34,10 @@ RUN apt-get install -y tree
 # EagleCAD >= 7 (< 8)
 RUN wget ftp://ftp.cadsoft.de/eagle/program/7.7/eagle-lin64-7.7.0.run
 RUN chmod +x $PWD/eagle-lin64-7.7.0.run
-RUN $PWD/eagle-lin64-7.7.0.run $PWD
-RUN export EAGLE=$PWD/eagle-7.7.0/bin/eagle
-
-
-RUN tree
+#RUN $PWD/eagle-lin64-7.7.0.run $PWD
+#RUN export EAGLE=$PWD/eagle-7.7.0/bin/eagle
+RUN $PWD/eagle-lin64-7.7.0.run /opt
+RUN export EAGLE=/opt/eagle-7.7.0/bin/eagle
 
 
 # setup a pseudo-display
@@ -53,6 +52,9 @@ RUN $EAGLE -? || true    # DOES need a display
 RUN $EAGLE -d? || true    # DOES need a display
 #RUN xvfb-run -a $EAGLE -? || true    # DOES need a display
 #RUN xvfb-run -a $EAGLE -d? || true    # DOES need a display
+
+
+RUN tree
 
 
 # generate gerber, excellon, bom - see https://github.com/drtrigon/test-eagle-edrc
