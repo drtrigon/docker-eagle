@@ -35,7 +35,8 @@ RUN apt-get install -y tree
 RUN wget ftp://ftp.cadsoft.de/eagle/program/7.7/eagle-lin64-7.7.0.run
 RUN chmod +x $PWD/eagle-lin64-7.7.0.run
 #RUN $PWD/eagle-lin64-7.7.0.run $PWD
-#RUN export EAGLE=$PWD/eagle-7.7.0/bin/eagle
+##RUN export EAGLE=$PWD/eagle-7.7.0/bin/eagle
+#ENV EAGLE $PWD/eagle-7.7.0/bin/eagle
 RUN $PWD/eagle-lin64-7.7.0.run /opt
 #RUN export EAGLE=/opt/eagle-7.7.0/bin/eagle
 ENV EAGLE /opt/eagle-7.7.0/bin/eagle
@@ -43,16 +44,14 @@ ENV EAGLE /opt/eagle-7.7.0/bin/eagle
 
 # setup a pseudo-display
 #RUN "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
-
 #RUN sleep 3
-
 #RUN export DISPLAY=:1.0
 
 
-RUN $EAGLE -? || true    # DOES need a display
-RUN $EAGLE -d? || true    # DOES need a display
-#RUN xvfb-run -a $EAGLE -? || true    # DOES need a display
-#RUN xvfb-run -a $EAGLE -d? || true    # DOES need a display
+#RUN $EAGLE -? || true    # DOES need a display
+#RUN $EAGLE -d? || true    # DOES need a display
+RUN xvfb-run -a $EAGLE -? || true    # DOES need a display
+RUN xvfb-run -a $EAGLE -d? || true    # DOES need a display
 
 
 RUN tree

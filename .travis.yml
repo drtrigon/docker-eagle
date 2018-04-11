@@ -14,9 +14,8 @@ services:
 
 install:
   - COMMIT=${TRAVIS_COMMIT::8} ;
-  - REPO=pywikibotcatfiles/file-metadata ;
+  - REPO=drtrigon/docker-eagle ;
   - LATEST=ubuntu-14.04 ;
-  - echo $DOCKERFILE - $COMMIT - $REPO - $LATEST
 #  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS ;
   - docker build -f $DOCKERFILE -t $REPO:$COMMIT . ;
 #  - docker tag $REPO:$COMMIT $REPO:$DOCKERTAG ;
