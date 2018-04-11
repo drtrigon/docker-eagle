@@ -1,6 +1,8 @@
 # $DOCKER_USER, $DOCKER_PASS (hide) and $TRAVIS_TOKEN (hide) in Settings > Environment Variables
 # Triggering builds (get TOKEN): https://docs.travis-ci.com/user/triggering-builds/
 
+# TODO: testing without "|| true" to get error feadback, add other eagle versions
+
 language: bash
 
 sudo: false
@@ -19,24 +21,33 @@ install:
   - COMMIT=${TRAVIS_COMMIT::8} ;
   - REPO=drtrigon/docker-eagle ;
   - LATEST=ubuntu-14.04 ;
-#  - docker login -u $DOCKER_USER -p $DOCKER_PASS ;
-#  - docker build -f $DOCKERFILE -t $REPO:$COMMIT . ;
-#  - docker tag $REPO:$COMMIT $REPO:$DOCKERTAG ;
-#  # - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER ;
-#  - if [[ "$DOCKERTAG" == "$LATEST" ]] ; then
-#      docker tag $REPO:$COMMIT $REPO:latest ;
-#    fi
-  - COMMIT=$DOCKERTAG ;          # debug: pull instead of build for faster developpment
-  - docker pull $REPO:$COMMIT ;  # debug: pull instead of build for faster developpment
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS ;
+  - docker build -f $DOCKERFILE -t $REPO:$COMMIT . ;
+  - docker tag $REPO:$COMMIT $REPO:$DOCKERTAG ;
+  # - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER ;
+  - if [[ "$DOCKERTAG" == "$LATEST" ]] ; then
+      docker tag $REPO:$COMMIT $REPO:latest ;
+    fi
+  #- COMMIT=$DOCKERTAG ;          # debug: pull instead of build for faster developpment
+  #- docker pull $REPO:$COMMIT ;  # debug: pull instead of build for faster developpment
 
 script:
   - docker images ;
   - docker run -t -d --name testing $REPO:$COMMIT bin/bash ;
   - docker ps -l ;
-  - docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -? || true ;     # DOES need a display
-  - docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -d? || true ;    # DOES need a display
+  #- docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -? || true ;     # DOES need a display
+  #- docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -d? || true ;    # DOES need a display
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -?' || true ;
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -d?' || true ;
+  - docker exec -t testing  apt-get install -y xdotool ;
+  # choose free license "EAGLE Express"
+  - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE & sleep 3; xdotool getwindowfocus getwindowname; xdotool key Right; xdotool key Return; sleep 2; xdotool getwindowfocus getwindowname; xdotool key y; sleep 2; xdotool getwindowfocus getwindowname; xdotool key Escape; sleep 2; xdotool getwindowfocus getwindowname; xdotool mousemove 1 1 click 1; sleep 2; xdotool getwindowfocus getwindowname; xdotool keydown alt key f; xdotool keyup alt; xdotool key x; sleep 5; xwininfo -tree -root; killall eagle' || true ;
+  # generate gerbers ${BOARD_FILE}.brd in $PWD directory
+  # ...
+  # drill excellion creation
+  # ...
+  # bom part list creation
+  # ...
   - docker stop testing ;
   - docker rm testing ;
   #- docker rmi $REPO:$COMMIT
@@ -44,12 +55,11 @@ script:
   #- docker container ls ;
   - docker ps -l ;
 
-#after_success:
-#  # Upload to docker if it's on the master branch
-#  - if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == "false" ]] ; then
-#      docker push $REPO ;
-#    fi
-
+after_success:
+  # Upload to docker if it's on the master branch
+  - if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == "false" ]] ; then
+      docker push $REPO ;
+    fi
 #  # trigger docker-sketchbook (same tests based on docker-arduino)
 #  - |-
 #    if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == "false" ]] ; then
