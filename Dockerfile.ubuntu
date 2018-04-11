@@ -49,8 +49,7 @@ ENV EAGLE /opt/eagle-7.7.0/bin/eagle
 
 
 RUN apt-get install -y xvfb
-#RUN apt-get install -y libfontconfig1 libxrender1 libxrandr2
-RUN apt-get install -y xserver
+RUN apt-get install -y libfontconfig1 libxrender1 libxrandr2 libxcursor1
 
 #RUN $EAGLE -? || true    # DOES need a display
 #RUN $EAGLE -d? || true    # DOES need a display
