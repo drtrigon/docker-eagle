@@ -9,45 +9,7 @@ MAINTAINER DrTrigon <dr.trigon@surfeu.ch>
 # Initial update
 RUN apt-get -y update
 
-# wget
-RUN apt-get install -y wget
-
-# tree
-RUN apt-get install -y tree
-
-## xdotool
-#RUN apt-get install -y xdotool
-
-## GerbV
-#RUN apt-get install -y gerbv
-
-## caca
-#RUN apt-get install -y caca-utils
-
-## EagleCAD >= 8
-#RUN wget https://trial2.autodesk.com/NET17SWDLD/2017/EGLPRM/ESD/Autodesk_EAGLE_8.7.1_English_Linux_64bit.tar.gz
-#RUN tar xf Autodesk_EAGLE_8.7.1_English_Linux_64bit.tar.gz
-#RUN $PWD/eagle-8.7.1/eagle & sleep 3; xdotool key Y
-#RUN export EAGLE=$PWD/eagle-8.7.1/eagle
-#RUN $EAGLE -?    # needs autocad account and login
-
-# EagleCAD >= 7 (< 8)
-RUN wget ftp://ftp.cadsoft.de/eagle/program/7.7/eagle-lin64-7.7.0.run
-RUN chmod +x $PWD/eagle-lin64-7.7.0.run
-#RUN $PWD/eagle-lin64-7.7.0.run $PWD
-##RUN export EAGLE=$PWD/eagle-7.7.0/bin/eagle
-#ENV EAGLE $PWD/eagle-7.7.0/bin/eagle
-RUN $PWD/eagle-lin64-7.7.0.run /opt
-ENV EAGLE /opt/eagle-7.7.0/bin/eagle
-
-
-# setup a pseudo-display
-#RUN "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
-#RUN sleep 3
-#RUN export DISPLAY=:1.0
-
-
-RUN apt-get install -y xvfb
+# EagleCAD dependencies
 RUN apt-get install -y \
   libXrender1 \
   libXrandr2 \
@@ -67,16 +29,57 @@ RUN apt-get install -y \
   gcc-multilib
 #  libc6
 
-RUN apt-get install -y binutils strace
-RUN ldd $EAGLE
-RUN objdump -p $EAGLE | grep NEEDED
-RUN readelf -d $EAGLE | grep 'NEEDED'
-RUN xvfb-run -a strace -e trace=open $EAGLE -?
+# wget
+RUN apt-get install -y wget
 
-#RUN $EAGLE -? || true    # DOES need a display
-#RUN $EAGLE -d? || true    # DOES need a display
+## xdotool
+#RUN apt-get install -y xdotool
+
+## EagleCAD >= 8
+#RUN wget https://trial2.autodesk.com/NET17SWDLD/2017/EGLPRM/ESD/Autodesk_EAGLE_8.7.1_English_Linux_64bit.tar.gz
+#RUN tar xf Autodesk_EAGLE_8.7.1_English_Linux_64bit.tar.gz
+#RUN $PWD/eagle-8.7.1/eagle & sleep 3; xdotool key Y
+##RUN export EAGLE=$PWD/eagle-8.7.1/eagle
+#ENV EAGLE $PWD/eagle-8.7.1/eagle
+#RUN $EAGLE -?    # needs autocad account and login
+
+# EagleCAD >= 7 (< 8)
+RUN wget ftp://ftp.cadsoft.de/eagle/program/7.7/eagle-lin64-7.7.0.run
+RUN chmod +x $PWD/eagle-lin64-7.7.0.run
+RUN $PWD/eagle-lin64-7.7.0.run /opt
+ENV EAGLE /opt/eagle-7.7.0/bin/eagle
+
+## Check eaglecad dependencies
+#RUN apt-get install -y binutils strace
+#RUN ldd $EAGLE
+#RUN objdump -p $EAGLE | grep NEEDED
+#RUN readelf -d $EAGLE | grep 'NEEDED'
+#RUN xvfb-run -a strace -e trace=open $EAGLE -?
+
+### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### 
+
+# tree
+RUN apt-get install -y tree
+
+## GerbV
+#RUN apt-get install -y gerbv
+
+## caca
+#RUN apt-get install -y caca-utils
+
+
+# Setup a pseudo-display
+#RUN "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
+#RUN sleep 3
+#RUN export DISPLAY=:1.0
+
+
+RUN apt-get install -y xvfb
+
 RUN xvfb-run -a $EAGLE -? || true    # DOES need a display
 RUN xvfb-run -a $EAGLE -d? || true    # DOES need a display
+RUN $EAGLE -? || true    # DOES need a display
+RUN $EAGLE -d? || true    # DOES need a display
 
 
 RUN tree
