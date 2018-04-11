@@ -49,7 +49,13 @@ ENV EAGLE /opt/eagle-7.7.0/bin/eagle
 
 
 RUN apt-get install -y xvfb
-RUN apt-get install -y libfontconfig1 libxrender1 libxrandr2 libxcursor1
+RUN apt-get install -y libfontconfig1 libxrender1 libxrandr2 libxcursor1 libxi6
+
+RUN apt-get install -y libc-bin binutils strace grep
+RUN ldd $EAGLE
+RUN objdump -p $EAGLE | grep NEEDED
+RUN readelf -d $EAGLE | grep 'NEEDED'
+RUN strace -e trace=open date $EAGLE
 
 #RUN $EAGLE -? || true    # DOES need a display
 #RUN $EAGLE -d? || true    # DOES need a display
