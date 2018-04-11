@@ -33,11 +33,10 @@ script:
   - docker images ;
   - docker run -t -d --name testing $REPO:$COMMIT bin/bash ;
   - docker ps -l ;
-  - docker exec -t testing  /bin/bash -c 'xvfb-run -a /opt/eagle-7.7.0/bin/eagle -?' ;
-  - docker exec -t testing  /bin/bash -c 'xvfb-run -a \$EAGLE -?' ;
-  - docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -? ;
-  - docker exec -t testing  xvfb-run -a \$EAGLE -? ;
-  - docker exec -t testing  /bin/bash -c 'xvfb-run -a /opt/eagle-7.7.0/bin/eagle -d?' ;
+  - docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -? ;     # DOES need a display
+  - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -?' ;
+  - docker exec -t testing  xvfb-run -a $EAGLE -? ;
+  - docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -d? ;    # DOES need a display
   - docker stop testing ;
   - docker rm testing ;
   #- docker rmi $REPO:$COMMIT
