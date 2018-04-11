@@ -9,7 +9,7 @@ MAINTAINER DrTrigon <dr.trigon@surfeu.ch>
 # Initial update
 RUN apt-get -y update
 
-# EagleCAD dependencies
+# Install EagleCAD dependencies
 RUN apt-get install -y \
   libXrender1 \
   libXrandr2 \
@@ -28,6 +28,9 @@ RUN apt-get install -y \
 #  libxcb1 \
   gcc-multilib
 #  libc6
+
+# Install pseudo-display (xvfb)
+RUN apt-get install -y xvfb
 
 # wget
 RUN apt-get install -y wget
@@ -49,7 +52,7 @@ RUN chmod +x $PWD/eagle-lin64-7.7.0.run
 RUN $PWD/eagle-lin64-7.7.0.run /opt
 ENV EAGLE /opt/eagle-7.7.0/bin/eagle
 
-## Check eaglecad dependencies
+## Check EagleCAD dependencies
 #RUN apt-get install -y binutils strace
 #RUN ldd $EAGLE
 #RUN objdump -p $EAGLE | grep NEEDED
@@ -58,33 +61,10 @@ ENV EAGLE /opt/eagle-7.7.0/bin/eagle
 
 ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### 
 
-# tree
-RUN apt-get install -y tree
+# add your code here or use this docker in your own Dockerfile FROM ...:...
+# e.g. use it to generate gerber, excellon or bom files
+# (see https://github.com/drtrigon/test-eagle-edrc)
+# or by using a vnc display, eagle could may be be used as usual
 
-## GerbV
-#RUN apt-get install -y gerbv
-
-## caca
-#RUN apt-get install -y caca-utils
-
-
-# Setup a pseudo-display
-#RUN "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
-#RUN sleep 3
-#RUN export DISPLAY=:1.0
-
-
-RUN apt-get install -y xvfb
-
-RUN xvfb-run -a $EAGLE -? || true    # DOES need a display
-RUN xvfb-run -a $EAGLE -d? || true    # DOES need a display
-RUN $EAGLE -? || true    # DOES need a display
-RUN $EAGLE -d? || true    # DOES need a display
-
-
-RUN tree
-
-
-# generate gerber, excellon, bom - see https://github.com/drtrigon/test-eagle-edrc
-
-# using vnc display, may be eagle could be used as usual
+# see examples at https://github.com/drtrigon/docker-eagle
+# (? working example https://github.com/drtrigon/docker-sketchbook ?)
