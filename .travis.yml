@@ -31,24 +31,18 @@ install:
 
 script:
   - docker images ;
-  - docker run -t -d --name testing $REPO:$DOCKERTAG bin/bash ;
+  - docker run -t -d --name testing $REPO:$COMMIT bin/bash ;
   - docker ps -l ;
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a /opt/eagle-7.7.0/bin/eagle -?' ;
+  - docker exec -t testing  /bin/bash -c 'xvfb-run -a \$EAGLE -?' ;
+  - docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -? ;
+  - docker exec -t testing  xvfb-run -a \$EAGLE -? ;
+  - docker exec -t testing  /bin/bash -c 'xvfb-run -a /opt/eagle-7.7.0/bin/eagle -d?' ;
   - docker stop testing ;
   - docker rm testing ;
-  #- docker rmi $DOCKER:$DOCKERTAG
+  #- docker rmi $REPO:$COMMIT
   #- docker images ;
   #- docker container ls ;
-  - docker ps -l ;
-
-  - docker images ;
-  - docker run -t --rm $REPO:$COMMIT  "xvfb-run -a \$EAGLE -?" || true ;     # DOES need a display
-  - docker run -t --rm $REPO:$COMMIT  /bin/bash -c 'xvfb-run -a /opt/eagle-7.7.0/bin/eagle -?' || true ;     # DOES need a display
-  - docker run -t --rm $REPO:$COMMIT  xvfb-run -a \$EAGLE -? || true ;     # DOES need a display
-  - docker run -t --rm $REPO:$COMMIT  xvfb-run -a \$EAGLE -d? || true ;    # DOES need a display
-  - docker rmi $REPO:$COMMIT
-  - docker images ;
-  - docker container ls ;
   - docker ps -l ;
 
 #after_success:
