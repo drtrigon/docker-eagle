@@ -19,14 +19,14 @@ install:
   - COMMIT=${TRAVIS_COMMIT::8} ;
   - REPO=drtrigon/docker-eagle ;
   - LATEST=ubuntu-14.04 ;
-  - docker login -u $DOCKER_USER -p $DOCKER_PASS ;
+#  - docker login -u $DOCKER_USER -p $DOCKER_PASS ;
 #  - docker build -f $DOCKERFILE -t $REPO:$COMMIT . ;
+#  - docker tag $REPO:$COMMIT $REPO:$DOCKERTAG ;
+#  # - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER ;
+#  - if [[ "$DOCKERTAG" == "$LATEST" ]] ; then
+#      docker tag $REPO:$COMMIT $REPO:latest ;
+#    fi
   - docker pull $REPO:$LATEST ;  # debug: pull instead of build for faster developpment
-  - docker tag $REPO:$COMMIT $REPO:$DOCKERTAG ;
-  # - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER ;
-  - if [[ "$DOCKERTAG" == "$LATEST" ]] ; then
-      docker tag $REPO:$COMMIT $REPO:latest ;
-    fi
 
 script:
   - docker images ;
