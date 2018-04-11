@@ -38,7 +38,6 @@ RUN chmod +x $PWD/eagle-lin64-7.7.0.run
 ##RUN export EAGLE=$PWD/eagle-7.7.0/bin/eagle
 #ENV EAGLE $PWD/eagle-7.7.0/bin/eagle
 RUN $PWD/eagle-lin64-7.7.0.run /opt
-#RUN export EAGLE=/opt/eagle-7.7.0/bin/eagle
 ENV EAGLE /opt/eagle-7.7.0/bin/eagle
 
 
@@ -49,13 +48,33 @@ ENV EAGLE /opt/eagle-7.7.0/bin/eagle
 
 
 RUN apt-get install -y xvfb
-RUN apt-get install -y libfontconfig1 libxrender1 libxrandr2 libxcursor1 libxi6
+RUN apt-get install -y \
+  libXrender1 \
+  libXrandr2 \
+  libXcursor1 \
+  libfreetype6 \
+  libfontconfig1 \
+  libXext6 \
+  libx11-6 \
+  libdl2 \
+  libXi6 \
+  libpthread-stubs0-dev \
+  librt1 \
+  libssl1.0.0 \
+  libcrypto1.0.0 \
+  libcups2 \
+  libz1 \
+  libX11-xcb1 \
+  libxcb1 \
+  libm6 \
+  gcc-multilib \
+  libc6
 
-RUN apt-get install -y libc-bin binutils strace grep
+RUN apt-get install -y binutils strace
 RUN ldd $EAGLE
 RUN objdump -p $EAGLE | grep NEEDED
 RUN readelf -d $EAGLE | grep 'NEEDED'
-RUN strace -e trace=open date $EAGLE
+RUN strace -e trace=open $EAGLE
 
 #RUN $EAGLE -? || true    # DOES need a display
 #RUN $EAGLE -d? || true    # DOES need a display
