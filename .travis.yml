@@ -20,7 +20,8 @@ install:
   - REPO=drtrigon/docker-eagle ;
   - LATEST=ubuntu-14.04 ;
   - docker login -u $DOCKER_USER -p $DOCKER_PASS ;
-  - docker build -f $DOCKERFILE -t $REPO:$COMMIT . ;
+#  - docker build -f $DOCKERFILE -t $REPO:$COMMIT . ;
+  - docker pull $REPO:$LATEST ;  # debug: pull instead of build for faster developpment
   - docker tag $REPO:$COMMIT $REPO:$DOCKERTAG ;
   # - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER ;
   - if [[ "$DOCKERTAG" == "$LATEST" ]] ; then
@@ -29,7 +30,7 @@ install:
 
 script:
   - docker images ;
-  - docker run -t --rm $REPO:$COMMIT  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -?" ;     # DOES need a display
+  - docker run -t --rm $REPO:$COMMIT  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -? ;     # DOES need a display
   - docker run -t --rm $REPO:$COMMIT  "xvfb-run -a $EAGLE -?" ;     # DOES need a display
   - docker run -t --rm $REPO:$COMMIT  "xvfb-run -a \$EAGLE -?" ;     # DOES need a display
   - docker run -t --rm $REPO:$COMMIT  xvfb-run -a \$EAGLE -? ;     # DOES need a display
