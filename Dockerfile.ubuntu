@@ -59,7 +59,7 @@ RUN apt-get install -y \
   libXi6 \
   libpthread-stubs0-dev \
   libssl1.0.0 \
-  libcrypto1.0.0-udeb \
+  libssl-dev \
   libcups2 \
   libz1 \
   libX11-xcb1 \
