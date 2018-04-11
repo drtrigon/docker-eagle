@@ -48,6 +48,7 @@ ENV EAGLE /opt/eagle-7.7.0/bin/eagle
 #RUN export DISPLAY=:1.0
 
 
+RUN apt-get install -y xvfb
 #RUN $EAGLE -? || true    # DOES need a display
 #RUN $EAGLE -d? || true    # DOES need a display
 RUN xvfb-run -a $EAGLE -? || true    # DOES need a display
