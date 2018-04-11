@@ -37,7 +37,8 @@ RUN chmod +x $PWD/eagle-lin64-7.7.0.run
 #RUN $PWD/eagle-lin64-7.7.0.run $PWD
 #RUN export EAGLE=$PWD/eagle-7.7.0/bin/eagle
 RUN $PWD/eagle-lin64-7.7.0.run /opt
-RUN export EAGLE=/opt/eagle-7.7.0/bin/eagle
+#RUN export EAGLE=/opt/eagle-7.7.0/bin/eagle
+ENV EAGLE /opt/eagle-7.7.0/bin/eagle
 
 
 # setup a pseudo-display
