@@ -1,12 +1,12 @@
 [![Build Status](https://travis-ci.org/drtrigon/docker-eagle.svg?branch=master)](https://travis-ci.org/drtrigon/docker-eagle)
 
+https://github.com/drtrigon/test-eagle-edrc
+
 https://github.com/pywikibot-catfiles/docker-file-metadata
 
 https://github.com/drtrigon/sketchbook
 
 (https://github.com/drtrigon/eagle)
-
-https://github.com/drtrigon/test-eagle-edrc
 
 ## Setup
 Overload Origin with Both Remotes in order to clone and set this repo up use:
