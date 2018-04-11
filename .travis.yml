@@ -29,6 +29,10 @@ install:
 
 script:
   - docker images ;
+  - docker run -t --rm $REPO:$COMMIT  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -?" ;     # DOES need a display
+  - docker run -t --rm $REPO:$COMMIT  "xvfb-run -a $EAGLE -?" ;     # DOES need a display
+  - docker run -t --rm $REPO:$COMMIT  "xvfb-run -a \$EAGLE -?" ;     # DOES need a display
+  - docker run -t --rm $REPO:$COMMIT  xvfb-run -a \$EAGLE -? ;     # DOES need a display
   - docker run -t --rm $REPO:$COMMIT  /bin/bash -c 'xvfb-run -a $EAGLE -?' ;     # DOES need a display
   - docker run -t --rm $REPO:$COMMIT  /bin/bash -c 'xvfb-run -a $EAGLE -d?' ;    # DOES need a display
   - docker rmi $REPO:$COMMIT
