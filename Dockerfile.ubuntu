@@ -56,17 +56,14 @@ RUN apt-get install -y \
   libfontconfig1 \
   libXext6 \
   libx11-6 \
-  libdl2 \
   libXi6 \
   libpthread-stubs0-dev \
-  librt1 \
   libssl1.0.0 \
-  libcrypto1.0.0 \
+  libcrypto1.0.0-udeb \
   libcups2 \
   libz1 \
   libX11-xcb1 \
   libxcb1 \
-  libm6 \
   gcc-multilib \
   libc6
 
