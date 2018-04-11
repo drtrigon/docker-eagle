@@ -3,9 +3,6 @@ MAINTAINER DrTrigon <dr.trigon@surfeu.ch>
 
 # LABEL author.user1="DrTrigon <dr.trigon@surfeu.ch>"
 
-# Environment Variables
-#ENV BOARD_FILE test-eagle-edrc
-
 # Initial update
 RUN apt-get -y update
 
