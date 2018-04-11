@@ -52,26 +52,26 @@ RUN apt-get install -y \
   libXrender1 \
   libXrandr2 \
   libXcursor1 \
-  libfreetype6 \
+#  libfreetype6 \
   libfontconfig1 \
-  libXext6 \
-  libx11-6 \
+#  libXext6 \
+#  libx11-6 \
   libXi6 \
   libpthread-stubs0-dev \
   libssl1.0.0 \
   libssl-dev \
   libcups2 \
   libz1 \
-  libX11-xcb1 \
-  libxcb1 \
-  gcc-multilib \
-  libc6
+#  libX11-xcb1 \
+#  libxcb1 \
+  gcc-multilib
+#  libc6
 
 RUN apt-get install -y binutils strace
 RUN ldd $EAGLE
 RUN objdump -p $EAGLE | grep NEEDED
 RUN readelf -d $EAGLE | grep 'NEEDED'
-RUN strace -e trace=open $EAGLE
+RUN xvfb-run -a strace -e trace=open $EAGLE
 
 #RUN $EAGLE -? || true    # DOES need a display
 #RUN $EAGLE -d? || true    # DOES need a display
