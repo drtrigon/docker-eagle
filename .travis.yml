@@ -33,8 +33,13 @@ install:
 
 script:
   - docker images ;
+  - sudo groupadd docker ;
+  - sudo gpasswd -a dummy-user docker ;
+  - newgrp docker ;
   - docker run -t -d --name testing $REPO:$COMMIT bin/bash ;
   - docker ps -l ;
+  - docker exec -t testing  hello-world ;
+  - docker exec -t testing  /bin/bash -c 'echo $USER' ;
   #- docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -? || true ;     # DOES need a display
   #- docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -d? || true ;    # DOES need a display
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -?' || true ;
