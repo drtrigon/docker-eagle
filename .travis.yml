@@ -54,6 +54,7 @@ script:
   - docker exec -t testing  apt-get install -y tree ;
   - docker exec -t testing  /bin/bash -c 'tree' ;
   - docker exec -t testing  tree ;
+  - docker exec -t testing  /bin/bash -c 'mv /test-eagle-edrc/* /' ;
   - docker exec -t testing  mv /test-eagle-edrc/* / ;
   # choose free license "EAGLE Express" (with or w/o "Warning" dialog)
   - docker exec -t testing  /bin/bash -c '/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16; sleep 3; export DISPLAY=:1.0; $EAGLE & sleep 3; xdotool getwindowfocus getwindowname; xdotool key Right; xdotool key Return; sleep 2; xdotool getwindowfocus getwindowname; xdotool key y; sleep 2; xdotool getwindowfocus getwindowname; xdotool key Escape; sleep 2; xdotool getwindowfocus getwindowname; xdotool mousemove 1 1 click 1; sleep 2; xdotool getwindowfocus getwindowname; xdotool keydown alt key f; xdotool keyup alt; xdotool key x; sleep 5; xwininfo -tree -root; killall eagle || true' ;
