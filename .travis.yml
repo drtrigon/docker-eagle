@@ -33,10 +33,8 @@ install:
 
 script:
   - docker images ;
-  - echo $USER || true ;
-  - sudo groupadd docker || true ;
   - sudo gpasswd -a $USER docker || true ;
-  - newgrp docker || true ;
+  - sg docker -c "bash" || true ;
   - docker run -t -d --name testing $REPO:$COMMIT bin/bash ;
   - docker ps -l ;
   - docker exec -t testing  hello-world || true ;
