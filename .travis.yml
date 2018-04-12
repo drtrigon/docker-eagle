@@ -37,7 +37,7 @@ install:
 
 script:
   - docker images ;
-  - docker run -t -d --name testing $REPO:$COMMIT  bin/bash ;
+  - docker run -t -d -e BOARD_FILE=$BOARD_FILE --name testing $REPO:$COMMIT  bin/bash ;
   - docker ps -l ;
   #- docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -? || true ;     # DOES need a display
   #- docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -d? || true ;    # DOES need a display
@@ -48,6 +48,7 @@ script:
 #  - docker exec -t testing  /bin/bash -c 'export EXCELLON_CAM_FILE=excellon.cam' ;
 #  - docker exec -t testing  /bin/bash -c 'export ULP_BOM_FILE=bom.ulp' ;
 #  - docker exec -t testing  /bin/bash -c 'export BOARD_FILE=test-eagle-edrc' ;
+  - docker exec -t testing  /bin/bash -c 'echo - $BOARD_FILE -' ;
   - docker exec -e "GERBER_CAM_FILE" -e "EXCELLON_CAM_FILE" -e "ULP_BOM_FILE" -e BOARD_FILE=$BOARD_FILE -t testing  /bin/bash -c 'echo - $BOARD_FILE -' ;
   - docker exec -e "GERBER_CAM_FILE" -e "EXCELLON_CAM_FILE" -e "ULP_BOM_FILE" -e "BOARD_FILE=$BOARD_FILE" -t testing  /bin/bash -c 'env' ;
   - docker exec -e "GERBER_CAM_FILE" -e "EXCELLON_CAM_FILE" -e "ULP_BOM_FILE" -e "BOARD_FILE" -t testing  env ;
