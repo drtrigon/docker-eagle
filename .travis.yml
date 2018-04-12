@@ -21,6 +21,10 @@ install:
   - COMMIT=${TRAVIS_COMMIT::8} ;
   - REPO=drtrigon/docker-eagle ;
   - LATEST=ubuntu-14.04 ;
+  - GERBER_CAM_FILE=gerb274x.cam ;
+  - EXCELLON_CAM_FILE=excellon.cam ;
+  - ULP_BOM_FILE=bom.ulp ;
+  - BOARD_FILE=test-eagle-edrc ;
 #  - docker login -u $DOCKER_USER -p $DOCKER_PASS ;
 #  - docker build -f $DOCKERFILE -t $REPO:$COMMIT . ;
 #  - docker tag $REPO:$COMMIT $REPO:$DOCKERTAG ;
@@ -33,18 +37,18 @@ install:
 
 script:
   - docker images ;
-  - docker run -t -d --name testing $REPO:$COMMIT bin/bash ;
+  - docker run -t -d --name testing -e GERBER_CAM_FILE -e EXCELLON_CAM_FILE -e ULP_BOM_FILE -e BOARD_FILE $REPO:$COMMIT bin/bash ;
   - docker ps -l ;
   #- docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -? || true ;     # DOES need a display
   #- docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -d? || true ;    # DOES need a display
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -?' || true ;
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -d?' || true ;
   ### this is where testing ends and usage examples start ###
-  - docker exec -t testing  /bin/bash -c 'export GERBER_CAM_FILE=gerb274x.cam' ;
-  - docker exec -t testing  /bin/bash -c 'export EXCELLON_CAM_FILE=excellon.cam' ;
-  - docker exec -t testing  /bin/bash -c 'export ULP_BOM_FILE=bom.ulp' ;
-  - docker exec -t testing  /bin/bash -c 'export BOARD_FILE=test-eagle-edrc' ;
-  - docker exec -t testing  /bin/bash -c 'echo $BOARD_FILE' ;
+#  - docker exec -t testing  /bin/bash -c 'export GERBER_CAM_FILE=gerb274x.cam' ;
+#  - docker exec -t testing  /bin/bash -c 'export EXCELLON_CAM_FILE=excellon.cam' ;
+#  - docker exec -t testing  /bin/bash -c 'export ULP_BOM_FILE=bom.ulp' ;
+#  - docker exec -t testing  /bin/bash -c 'export BOARD_FILE=test-eagle-edrc' ;
+  - docker exec -t testing  /bin/bash -c 'echo - $BOARD_FILE -' ;
   - docker exec -t testing  apt-get install -y git xdotool x11-utils psmisc ;
   - docker exec -t testing  git clone https://github.com/drtrigon/test-eagle-edrc.git ;
   # choose free license "EAGLE Express" (with or w/o "Warning" dialog)
