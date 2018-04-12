@@ -48,8 +48,8 @@ script:
 #  - docker exec -t testing  /bin/bash -c 'export EXCELLON_CAM_FILE=excellon.cam' ;
 #  - docker exec -t testing  /bin/bash -c 'export ULP_BOM_FILE=bom.ulp' ;
 #  - docker exec -t testing  /bin/bash -c 'export BOARD_FILE=test-eagle-edrc' ;
-  - docker exec -e "GERBER_CAM_FILE" -e "EXCELLON_CAM_FILE" -e "ULP_BOM_FILE" -e "BOARD_FILE" -t testing  /bin/bash -c 'echo - $BOARD_FILE -' ;
-  - docker exec -e "GERBER_CAM_FILE" -e "EXCELLON_CAM_FILE" -e "ULP_BOM_FILE" -e "BOARD_FILE" -t testing  /bin/bash -c 'env' ;
+  - docker exec -e "GERBER_CAM_FILE" -e "EXCELLON_CAM_FILE" -e "ULP_BOM_FILE" -e BOARD_FILE=$BOARD_FILE -t testing  /bin/bash -c 'echo - $BOARD_FILE -' ;
+  - docker exec -e "GERBER_CAM_FILE" -e "EXCELLON_CAM_FILE" -e "ULP_BOM_FILE" -e "BOARD_FILE=$BOARD_FILE" -t testing  /bin/bash -c 'env' ;
   - docker exec -e "GERBER_CAM_FILE" -e "EXCELLON_CAM_FILE" -e "ULP_BOM_FILE" -e "BOARD_FILE" -t testing  env ;
   - docker exec -t -e GERBER_CAM_FILE -e EXCELLON_CAM_FILE -e ULP_BOM_FILE -e BOARD_FILE testing  apt-get install -y git xdotool x11-utils psmisc ;
   - docker exec -t -e GERBER_CAM_FILE -e EXCELLON_CAM_FILE -e ULP_BOM_FILE -e BOARD_FILE testing  git clone https://github.com/drtrigon/test-eagle-edrc.git ;
