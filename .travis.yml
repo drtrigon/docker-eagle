@@ -45,7 +45,8 @@ script:
   - docker images ;
   #- docker run -t -d --name testing $REPO:$COMMIT  bin/bash ;
   #- docker run -t -d -e GERBER_CAM_FILE -e EXCELLON_CAM_FILE -e ULP_BOM_FILE -e BOARD_FILE --name testing $REPO:$COMMIT  bin/bash ;  # env vars passing not working
-  - docker run -t -d -e GERBER_CAM_FILE=$GERBER_CAM_FILE -e EXCELLON_CAM_FILE=$EXCELLON_CAM_FILE -e ULP_BOM_FILE=$ULP_BOM_FILE -e BOARD_FILE=$BOARD_FILE -e TRAVIS_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER -e GIT_USER=$GIT_USER -e GIT_PASS=$GIT_PASS --name testing $REPO:$COMMIT  bin/bash ;
+#  - docker run -t -d -e GERBER_CAM_FILE=$GERBER_CAM_FILE -e EXCELLON_CAM_FILE=$EXCELLON_CAM_FILE -e ULP_BOM_FILE=$ULP_BOM_FILE -e BOARD_FILE=$BOARD_FILE -e TRAVIS_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER -e GIT_USER=$GIT_USER -e GIT_PASS=$GIT_PASS --name testing $REPO:$COMMIT  bin/bash ;
+  - docker run -t -d -e GERBER_CAM_FILE=$GERBER_CAM_FILE -e EXCELLON_CAM_FILE=$EXCELLON_CAM_FILE -e ULP_BOM_FILE=$ULP_BOM_FILE -e BOARD_FILE=$BOARD_FILE --name testing $REPO:$COMMIT  bin/bash ;
   - docker ps -l ;
   #- docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -? || true ;     # DOES need a display
   #- docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -d? || true ;    # DOES need a display
@@ -84,7 +85,7 @@ script:
   - docker exec -t testing  git status ;
 #  - docker exec -t testing  /bin/bash -c 'git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"' ;
   - docker exec -t testing  git commit --message 'Travis build \#$TRAVIS_BUILD_NUMBER' ;
-  - docker exec -t testing  /bin/bash -c 'git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis' ;
+#  - docker exec -t testing  /bin/bash -c 'git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis' ;
   - docker exec -t testing  git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis ;
 #  - docker exec -t testing  apt-get install -y tree ;
 #  - docker exec -t testing  /bin/bash -c 'tree' ;
