@@ -75,8 +75,7 @@ script:
   - docker exec -t testing  /bin/bash -c 'zip ${BOARD_FILE}.zip ${BOARD_FILE}.cmp ${BOARD_FILE}.sol ${BOARD_FILE}.plc ${BOARD_FILE}.stc ${BOARD_FILE}.sts' ;  # gerb274x.cam
   - docker exec -t testing  /bin/bash -c 'zip -u ${BOARD_FILE}.zip ${BOARD_FILE}.drd' ;  # excellon.cam
   - docker exec -t testing  /bin/bash -c 'unzip -l ${BOARD_FILE}.zip' ;
-  # gerbv convert gerber to png for displaying
-  #- gerbv --export=png --resolution=640,480 --output=pretty-picture.png ${BOARD_FILE}.cmp ${BOARD_FILE}.sol ${BOARD_FILE}.plc ${BOARD_FILE}.stc ${BOARD_FILE}.sts
+  # gerbv convert gerber to png for displaying (--resolution=640,480 does not work)
   - docker exec -t testing  /bin/bash -c 'gerbv --export=png --output=${BOARD_FILE}.png ${BOARD_FILE}.cmp ${BOARD_FILE}.sol ${BOARD_FILE}.plc ${BOARD_FILE}.stc ${BOARD_FILE}.sts' ;
   - docker exec -t testing  /bin/bash -c 'img2txt --width=80 ${BOARD_FILE}.png' ;
   # push result back to git repo
@@ -84,7 +83,7 @@ script:
   - docker exec -t testing  /bin/bash -c 'git add ${BOARD_FILE}.zip ${BOARD_FILE}.gpi ${BOARD_FILE}.dri ${BOARD_FILE}.txt ${BOARD_FILE}.png' ;
   - docker exec -t testing  git status ;
 #  - docker exec -t testing  /bin/bash -c 'git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"' ;
-  - docker exec -t testing  git commit --message "Travis build: $TRAVIS_BUILD_NUMBER" ;
+  - docker exec -t testing  git commit --message \"Travis build: $TRAVIS_BUILD_NUMBER\" ;
   - docker exec -t testing  /bin/bash -c 'git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis' ;
   - docker exec -t testing  git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis ;
 #  - docker exec -t testing  apt-get install -y tree ;
