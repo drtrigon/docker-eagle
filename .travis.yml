@@ -52,10 +52,6 @@ script:
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -?' || true ;
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -d?' || true ;
   ### this is where testing ends and usage examples start ###
-  - docker exec -t testing  /bin/bash -c 'git commit --message \"Travis build \#$TRAVIS_BUILD_NUMBER\"' ;
-  - docker exec -t testing  git commit --message \"Travis build \#$TRAVIS_BUILD_NUMBER\" ;
-  - docker exec -t testing  git commit --message 'Travis build \#$TRAVIS_BUILD_NUMBER' ;
-
   - docker exec -t testing  /bin/bash -c 'env' ;
   - docker exec -t testing  apt-get install -y git xdotool x11-utils psmisc zip gerbv caca-utils ;
   - docker exec -t testing  git clone https://github.com/drtrigon/test-eagle-edrc.git ;
@@ -87,7 +83,7 @@ script:
   - docker exec -t testing  /bin/bash -c 'git add ${BOARD_FILE}.zip ${BOARD_FILE}.gpi ${BOARD_FILE}.dri ${BOARD_FILE}.txt ${BOARD_FILE}.png' ;
   - docker exec -t testing  git status ;
 #  - docker exec -t testing  /bin/bash -c 'git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"' ;
-  - docker exec -t testing  git commit --message \"Travis build: $TRAVIS_BUILD_NUMBER\" ;
+  - docker exec -t testing  git commit --message 'Travis build \#$TRAVIS_BUILD_NUMBER' ;
   - docker exec -t testing  /bin/bash -c 'git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis' ;
   - docker exec -t testing  git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis ;
 #  - docker exec -t testing  apt-get install -y tree ;
