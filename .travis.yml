@@ -14,20 +14,23 @@ language: bash
 sudo: false
 
 env:
-  - DOCKERFILE=Dockerfile.ubuntu DOCKERTAG=ubuntu-14.04
-  #- DOCKERFILE=Dockerfile.ubuntu-16.04 DOCKERTAG=ubuntu-16.04
-  #- DOCKERFILE=Dockerfile.centos DOCKERTAG=centos-7
-  #- DOCKERFILE=Dockerfile.debian DOCKERTAG=debian-jessie
-  #- DOCKERFILE=Dockerfile.debian-jessie-toollabs DOCKERTAG=debian-jessie-toollabs
+  global:
+    - BOARD_FILE=test-eagle-edrc
+    - GERBER_CAM_FILE=gerb274x.cam
+    - EXCELLON_CAM_FILE=excellon.cam
+    - ULP_BOM_FILE=bom.ulp
+#    - EAGLE_VERSION=7.7.0
+  matrix:
+    - DOCKERFILE=Dockerfile.ubuntu DOCKERTAG=ubuntu-14.04
+    - DOCKERFILE=Dockerfile.ubuntu-16.04 DOCKERTAG=ubuntu-16.04
+    #- DOCKERFILE=Dockerfile.centos DOCKERTAG=centos-7
+    #- DOCKERFILE=Dockerfile.debian DOCKERTAG=debian-jessie
+    #- DOCKERFILE=Dockerfile.debian-jessie-toollabs DOCKERTAG=debian-jessie-toollabs
 
 services:
   - docker
 
 install:
-  - GERBER_CAM_FILE=gerb274x.cam ;
-  - EXCELLON_CAM_FILE=excellon.cam ;
-  - ULP_BOM_FILE=bom.ulp ;
-  - BOARD_FILE=test-eagle-edrc ;
   - COMMIT=${TRAVIS_COMMIT::8} ;
   - REPO=drtrigon/docker-eagle ;
   - LATEST=ubuntu-14.04 ;
@@ -53,6 +56,7 @@ script:
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -?' || true ;
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -d?' || true ;
   ### this is where testing ends and usage examples start ###
+  - docker exec -t testing  git commit --message "Travis build #$TRAVIS_BUILD_NUMBER" ;
   - docker exec -t testing  /bin/bash -c 'env' ;
   - docker exec -t testing  apt-get install -y git xdotool x11-utils psmisc zip gerbv caca-utils ;
   - docker exec -t testing  git clone https://github.com/drtrigon/test-eagle-edrc.git ;
@@ -77,7 +81,7 @@ script:
   - docker exec -t testing  /bin/bash -c 'zip -u ${BOARD_FILE}.zip ${BOARD_FILE}.drd' ;  # excellon.cam
   - docker exec -t testing  /bin/bash -c 'unzip -l ${BOARD_FILE}.zip' ;
   # gerbv convert gerber to png for displaying (--resolution=640,480 does not work)
-  - docker exec -t testing  /bin/bash -c 'gerbv --export=png --output=${BOARD_FILE}.png ${BOARD_FILE}.cmp ${BOARD_FILE}.sol ${BOARD_FILE}.plc ${BOARD_FILE}.stc ${BOARD_FILE}.sts' ;
+  - docker exec -t testing  /bin/bash -c 'gerbv --export=png --dpi=600,600 --output=${BOARD_FILE}.png ${BOARD_FILE}.cmp ${BOARD_FILE}.sol ${BOARD_FILE}.plc ${BOARD_FILE}.stc ${BOARD_FILE}.sts' ;
   - docker exec -t testing  /bin/bash -c 'img2txt --width=80 ${BOARD_FILE}.png' ;
   # push result back to git repo
   - docker exec -t testing  /bin/bash -c 'ls -la ${BOARD_FILE}.*' ;
@@ -86,8 +90,7 @@ script:
   - docker exec -t testing  git config user.email 'travis@travis-ci.org'
   - docker exec -t testing  git config user.name 'Travis CI'
 #  - docker exec -t testing  /bin/bash -c 'git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"' ;
-  - docker exec -t testing  git commit --message 'Travis build \#$TRAVIS_BUILD_NUMBER' ;
-#  - docker exec -t testing  /bin/bash -c 'git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis' ;
+  - docker exec -t testing  git commit --message "Travis build #$TRAVIS_BUILD_NUMBER" ;
   - docker exec -t testing  git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis ;
 #  - docker exec -t testing  apt-get install -y tree ;
 #  - docker exec -t testing  /bin/bash -c 'tree' ;
