@@ -52,6 +52,10 @@ script:
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -?' || true ;
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -d?' || true ;
   ### this is where testing ends and usage examples start ###
+  - docker exec -t testing  /bin/bash -c 'git commit --message \"Travis build\: $TRAVIS_BUILD_NUMBER\"' ;
+  - docker exec -t testing  git commit --message \"Travis build\: $TRAVIS_BUILD_NUMBER\" ;
+  - docker exec -t testing  git commit --message 'Travis build: $TRAVIS_BUILD_NUMBER' ;
+
   - docker exec -t testing  /bin/bash -c 'env' ;
   - docker exec -t testing  apt-get install -y git xdotool x11-utils psmisc zip gerbv caca-utils ;
   - docker exec -t testing  git clone https://github.com/drtrigon/test-eagle-edrc.git ;
