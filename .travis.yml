@@ -1,8 +1,13 @@
 # $DOCKER_USER, $DOCKER_PASS (hide) and $TRAVIS_TOKEN (hide) in Settings > Environment Variables
 # Triggering builds (get TOKEN): https://docs.travis-ci.com/user/triggering-builds/
 
-# TODO: testing without "|| true" to get error feadback, add other eagle versions
 # TODO: gerber jobs do not finish properly yet - compare output to test-eagle-edrc travis output
+
+# TODO: testing without "|| true" to get error feadback, add other eagle versions
+# TODO: may be create scripts for eagle commands and add them in dockerfile
+
+# TODO: drc&erc but how to get output?'
+# TODO: auto-router step with proposal for routing as output
 
 language: bash
 
@@ -37,7 +42,6 @@ install:
   - docker pull $REPO:$COMMIT ;  # debug: pull instead of build for faster developpment
 
 script:
-  - echo - $TRAVIS_COMMIT - $TRAVIS_BUILD_NUMBER - ;
   - docker images ;
   #- docker run -t -d --name testing $REPO:$COMMIT  bin/bash ;
   #- docker run -t -d -e GERBER_CAM_FILE -e EXCELLON_CAM_FILE -e ULP_BOM_FILE -e BOARD_FILE --name testing $REPO:$COMMIT  bin/bash ;  # env vars passing not working
@@ -63,7 +67,7 @@ script:
   # bom part list creation
   - docker exec -t testing  /bin/bash -c '/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16; sleep 3; export DISPLAY=:1.0; $EAGLE & sleep 3; xdotool getwindowfocus getwindowname; xdotool key Escape; sleep 2; xdotool getwindowfocus getwindowname; xdotool mousemove 1 1 click 1; sleep 2; xdotool getwindowfocus getwindowname; xdotool keydown alt key f; xdotool keyup alt; xdotool key o; sleep 2; xdotool getwindowfocus getwindowname; xdotool type ${BOARD_FILE}.brd; xdotool key Return; sleep 2; xdotool getwindowfocus getwindowname; xdotool keydown alt key f; xdotool keyup alt; xdotool key r; sleep 2; xdotool getwindowfocus getwindowname; xdotool type $ULP_BOM_FILE; xdotool key Return; sleep 10; xdotool getwindowfocus getwindowname; xdotool keydown alt key s; xdotool keyup alt; sleep 2; xdotool getwindowfocus getwindowname; xdotool keydown alt key s; xdotool keyup alt; sleep 5; xdotool getwindowfocus getwindowname; xdotool mousemove 1 1 click 1; sleep 2; xdotool getwindowfocus getwindowname; xdotool key Escape; sleep 2; xdotool getwindowfocus getwindowname; xdotool mousemove 1 1 click 1; sleep 2; xdotool getwindowfocus getwindowname; xdotool keydown alt key f; xdotool keyup alt; xdotool key x; sleep 5; xwininfo -tree -root; killall eagle || true' ;
   - docker exec -t testing  /bin/bash -c 'cat ${BOARD_FILE}.txt' ;  # bom.ulp
-  # prepare pushing results back to github
+  # prepare pushing results back to git repo
   - docker exec -t testing  /bin/bash -c 'mv /test-eagle-edrc/.git /' ;
   - docker exec -t testing  git status ;
   - docker exec -t testing  git checkout -b result/travis ;
@@ -79,8 +83,10 @@ script:
   - docker exec -t testing  /bin/bash -c 'ls -la ${BOARD_FILE}.*' ;
   - docker exec -t testing  /bin/bash -c 'git add ${BOARD_FILE}.zip ${BOARD_FILE}.gpi ${BOARD_FILE}.dri ${BOARD_FILE}.txt ${BOARD_FILE}.png' ;
   - docker exec -t testing  git status ;
-  - docker exec -t testing  /bin/bash -c 'git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"' ;
+#  - docker exec -t testing  /bin/bash -c 'git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"' ;
+  - docker exec -t testing  git commit --message "Travis build: $TRAVIS_BUILD_NUMBER" ;
   - docker exec -t testing  /bin/bash -c 'git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis' ;
+  - docker exec -t testing  git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis ;
 #  - docker exec -t testing  apt-get install -y tree ;
 #  - docker exec -t testing  /bin/bash -c 'tree' ;
 #  - docker exec -t testing  tree ;
@@ -93,12 +99,6 @@ script:
 
 # push resulting files to same repo but other branch and block/blacklist travis trigger for that branch
 # https://docs.travis-ci.com/user/customizing-the-build/#Building-only-the-latest-commit   Safelisting or blocklisting branches
-
-# may be create scripts for eagle commands and add them in dockerfile
-
-# auto-router step with proposal for routing as output
-
-# drc&erc but how to get output?'
 
 #after_success:
 #  # Upload to docker if it's on the master branch
