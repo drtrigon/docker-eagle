@@ -83,6 +83,8 @@ script:
   - docker exec -t testing  /bin/bash -c 'ls -la ${BOARD_FILE}.*' ;
   - docker exec -t testing  /bin/bash -c 'git add ${BOARD_FILE}.zip ${BOARD_FILE}.gpi ${BOARD_FILE}.dri ${BOARD_FILE}.txt ${BOARD_FILE}.png' ;
   - docker exec -t testing  git status ;
+  - docker exec -t testing  git config user.email 'travis@travis-ci.org'
+  - docker exec -t testing  git config user.name 'Travis CI'
 #  - docker exec -t testing  /bin/bash -c 'git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"' ;
   - docker exec -t testing  git commit --message 'Travis build \#$TRAVIS_BUILD_NUMBER' ;
 #  - docker exec -t testing  /bin/bash -c 'git push https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis' ;
