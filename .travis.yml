@@ -89,7 +89,7 @@ script:
   - docker exec -t testing  git status ;
   - docker exec -t testing  git config user.email 'travis@travis-ci.org'
   - docker exec -t testing  git config user.name 'Travis CI'
-  - docker exec -t testing  git commit --message "Travis build \#$TRAVIS_BUILD_NUMBER" ;
+  - docker exec -t testing  git commit --message "Travis build $TRAVIS_BUILD_NUMBER" ;
   - docker exec -t testing  git push -f https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis ;  # dangerous; overwrite remote branch!
   #- docker exec -t testing  apt-get install -y tree ;
   #- docker exec -t testing  tree ;
