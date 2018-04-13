@@ -35,15 +35,15 @@ install:
   - COMMIT=${TRAVIS_COMMIT::8} ;
   - REPO=drtrigon/docker-eagle ;
   - LATEST=ubuntu-14.04 ;
-#  - docker login -u $DOCKER_USER -p $DOCKER_PASS ;
-#  - docker build -f $DOCKERFILE -t $REPO:$COMMIT . ;
-#  - docker tag $REPO:$COMMIT $REPO:$DOCKERTAG ;
-#  # - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER ;
-#  - if [[ "$DOCKERTAG" == "$LATEST" ]] ; then
-#      docker tag $REPO:$COMMIT $REPO:latest ;
-#    fi
-  - COMMIT=$DOCKERTAG ;          # debug: pull instead of build for faster developpment
-  - docker pull $REPO:$COMMIT ;  # debug: pull instead of build for faster developpment
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS ;
+  - docker build -f $DOCKERFILE -t $REPO:$COMMIT . ;
+  - docker tag $REPO:$COMMIT $REPO:$DOCKERTAG ;
+  # - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER ;
+  - if [[ "$DOCKERTAG" == "$LATEST" ]] ; then
+      docker tag $REPO:$COMMIT $REPO:latest ;
+    fi
+#  - COMMIT=$DOCKERTAG ;          # debug: pull instead of build for faster developpment
+#  - docker pull $REPO:$COMMIT ;  # debug: pull instead of build for faster developpment
 
 script:
   - docker images ;
@@ -55,9 +55,10 @@ script:
   #- docker exec -t testing  xvfb-run -a /opt/eagle-7.7.0/bin/eagle -d? || true ;    # DOES need a display
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -?' || true ;
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -d?' || true ;
+
   ### this is where testing ends and usage examples start ###
   - docker exec -t testing  /bin/bash -c 'env' ;
-  - docker exec -t testing  apt-get install -y git xdotool x11-utils psmisc zip gerbv caca-utils ;
+  - docker exec -t testing  apt-get install -y git xdotool x11-utils psmisc zip gerbv ;#caca-utils ;
   - docker exec -t testing  git clone https://github.com/drtrigon/test-eagle-edrc.git ;
   - docker exec -t testing  /bin/bash -c 'mv /test-eagle-edrc/* /' ;
   # choose free license "EAGLE Express" (with or w/o "Warning" dialog)
@@ -73,7 +74,7 @@ script:
   - docker exec -t testing  /bin/bash -c 'cat ${BOARD_FILE}.txt' ;  # bom.ulp
   # prepare pushing results back to git repo
   - docker exec -t testing  /bin/bash -c 'mv /test-eagle-edrc/.git /' ;
-  - docker exec -t testing  git status ;
+  #- docker exec -t testing  git status ;
   - docker exec -t testing  git checkout -b result/travis ;
   # add generated files to zip archive
   - docker exec -t testing  /bin/bash -c 'zip ${BOARD_FILE}.zip ${BOARD_FILE}.cmp ${BOARD_FILE}.sol ${BOARD_FILE}.plc ${BOARD_FILE}.stc ${BOARD_FILE}.sts' ;  # gerb274x.cam
@@ -81,7 +82,7 @@ script:
   - docker exec -t testing  /bin/bash -c 'unzip -l ${BOARD_FILE}.zip' ;
   # gerbv convert gerber to png for displaying (--resolution=640,480 does not work)
   - docker exec -t testing  /bin/bash -c 'gerbv --export=png --dpi=600,600 --output=${BOARD_FILE}.png ${BOARD_FILE}.cmp ${BOARD_FILE}.sol ${BOARD_FILE}.plc ${BOARD_FILE}.stc ${BOARD_FILE}.sts' ;
-  - docker exec -t testing  /bin/bash -c 'img2txt --width=80 ${BOARD_FILE}.png' ;
+  #- docker exec -t testing  /bin/bash -c 'img2txt --width=80 ${BOARD_FILE}.png' ;
   # push result back to git repo
   - docker exec -t testing  /bin/bash -c 'ls -la ${BOARD_FILE}.*' ;
   - docker exec -t testing  /bin/bash -c 'git add ${BOARD_FILE}.zip ${BOARD_FILE}.gpi ${BOARD_FILE}.dri ${BOARD_FILE}.txt ${BOARD_FILE}.png' ;
@@ -90,9 +91,10 @@ script:
   - docker exec -t testing  git config user.name 'Travis CI'
   - docker exec -t testing  git commit --message "Travis build \#$TRAVIS_BUILD_NUMBER" ;
   - docker exec -t testing  git push -f https://$GIT_USER:$GIT_PASS@github.com/drtrigon/test-eagle-edrc.git result/travis ;  # dangerous; overwrite remote branch!
-#  - docker exec -t testing  apt-get install -y tree ;
-#  - docker exec -t testing  /bin/bash -c 'tree' ;
-#  - docker exec -t testing  tree ;
+  #- docker exec -t testing  apt-get install -y tree ;
+  #- docker exec -t testing  tree ;
+  ### this is where usage examples ends and testing start/continues ###
+
   - docker stop testing ;
   - docker rm testing ;
   - docker rmi $REPO:$COMMIT ;
@@ -100,12 +102,11 @@ script:
   #- docker container ls ;
   - docker ps -l ;
 
-#after_success:
-#  # Upload to docker if it's on the master branch
-#  - if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == "false" ]] ; then
-#      docker push $REPO ;
-#    fi
-
+after_success:
+  # Upload to docker if it's on the master branch
+  - if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == "false" ]] ; then
+      docker push $REPO ;
+    fi
 #  # trigger docker-sketchbook (same tests based on docker-arduino)
 #  - |-
 #    if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == "false" ]] ; then
