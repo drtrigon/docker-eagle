@@ -22,7 +22,7 @@ env:
 #    - EAGLE_VERSION=7.7.0
   matrix:
     - DOCKERFILE=Dockerfile.ubuntu DOCKERTAG=ubuntu-14.04
-    - DOCKERFILE=Dockerfile.ubuntu-16.04 DOCKERTAG=ubuntu-16.04
+    #- DOCKERFILE=Dockerfile.ubuntu-16.04 DOCKERTAG=ubuntu-16.04
     #- DOCKERFILE=Dockerfile.centos DOCKERTAG=centos-7
     #- DOCKERFILE=Dockerfile.debian DOCKERTAG=debian-jessie
     #- DOCKERFILE=Dockerfile.debian-jessie-toollabs DOCKERTAG=debian-jessie-toollabs
@@ -56,7 +56,7 @@ script:
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -?' || true ;
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -d?' || true ;
   ### this is where testing ends and usage examples start ###
-  - docker exec -t testing  git commit --message "Travis build #$TRAVIS_BUILD_NUMBER" ;
+  - docker exec -t testing  git commit --message "Travis build \#$TRAVIS_BUILD_NUMBER" ;
   - docker exec -t testing  /bin/bash -c 'env' ;
   - docker exec -t testing  apt-get install -y git xdotool x11-utils psmisc zip gerbv caca-utils ;
   - docker exec -t testing  git clone https://github.com/drtrigon/test-eagle-edrc.git ;
