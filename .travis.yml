@@ -47,7 +47,7 @@ script:
   - docker exec -t testing  /bin/bash -c 'xvfb-run -a $EAGLE -d?' || true ;
   ### this is where testing ends and usage examples start ###
   - docker exec -t testing  /bin/bash -c 'env' ;
-  - docker exec -t testing  apt-get install -y git xdotool x11-utils psmisc ;
+  - docker exec -t testing  apt-get install -y git xdotool x11-utils psmisc wmctrl ;
   - docker exec -t testing  git clone https://github.com/drtrigon/test-eagle-edrc.git ;
   - docker exec -t testing  /bin/bash -c 'mv /test-eagle-edrc/* /' ;
   # choose free license "EAGLE Express" (with or w/o "Warning" dialog)
